@@ -34,4 +34,50 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_equal name,  @user.name
     assert_equal email, @user.email
   end
+
+  test "successful edit with friendly forwarding" do
+    get edit_user_path(@user)
+    log_in_as(@user)
+    assert_redirected_to edit_user_url(@user)
+    name  = "Foo Bar"
+    email = "foo@bar.com"
+    patch user_path(@user), params: { user: { name:  name,
+                                              email: email,
+                                              password:              "",
+                                              password_confirmation: "" } }
+    assert_not flash.empty?
+    assert_redirected_to @user
+    @user.reload
+    assert_equal name,  @user.name
+    assert_equal email, @user.email
+  end
+
+  test "should redirect to default profile after second login" do
+    # 初回のログインで、edit_user_pathにアクセスして、session[:forwarding_url]が設定される
+    get edit_user_path(@user)
+    assert_equal session[:forwarding_url], edit_user_url(@user)
+    log_in_as(@user)
+    assert_redirected_to edit_user_url(@user)
+    
+    # ユーザー情報を更新
+    name  = "Foo Bar"
+    email = "foo@bar.com"
+    patch user_path(@user), params: { user: { name:  name,
+                                              email: email,
+                                              password:              "",
+                                              password_confirmation: "" } }
+    assert_not flash.empty?
+    assert_redirected_to @user
+    @user.reload
+    assert_equal name,  @user.name
+    assert_equal email, @user.email
+  
+    # ログアウト後、再度ログイン
+    delete logout_path
+    get login_path
+    log_in_as(@user)
+    
+    # 再ログイン後に、session[:forwarding_url]がクリアされ、デフォルトのプロフィールページにリダイレクトされる
+    assert_redirected_to @user
+  end
 end
