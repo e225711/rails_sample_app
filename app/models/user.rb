@@ -1,5 +1,6 @@
 class User < ApplicationRecord
     has_many :microposts, dependent: :destroy
+    has_many :active_relationships, class_name: "Relationship", dependent: :destroy
     attr_accessor :remember_token, :activation_token, :reset_token
     before_save :remember_token, :activation_token
     before_save :downcase_email
