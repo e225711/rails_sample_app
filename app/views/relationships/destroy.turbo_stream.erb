@@ -2,5 +2,5 @@
     <%= render partial: "users/follow" %>
 <% end %>
 <%= turbo_stream.update "followers" do %>
-    <%= @user.followers.count %> (Turbo利用中)
+    <%= @user.followers.count %> 
 <% end %>
