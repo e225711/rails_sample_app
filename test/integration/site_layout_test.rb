@@ -42,4 +42,13 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_template 'users/new'
     assert_select "title", full_title("Sign up")
   end
+
+  test "home page stats display" do
+    log_in_as(@user)
+    get root_path
+    assert_template 'static_pages/home'
+    assert_match @user.active_relationships.count.to_s, response.body
+    assert_match @user.passive_relationships.count.to_s, response.body
+    assert_match @user.microposts.count.to_s, response.body
+  end
 end
