@@ -17,7 +17,8 @@ gem "importmap-rails", "1.1.5"
 gem "turbo-rails",     "1.4.0"
 gem "stimulus-rails",  "1.2.1"
 gem "jbuilder",        "2.11.5"
-gem "puma",            "5.6.8"
+# gem "puma",            "5.6.8"
+# gem 'unicorn'
 gem "bootsnap",        "1.16.0", require: false
 gem "sqlite3",         "1.6.1"
 
@@ -41,4 +42,8 @@ group :test do
   gem "minitest-reporters",       "1.6.0"
   gem "guard",                    "2.18.0"
   gem "guard-minitest",           "2.4.6"
+end
+
+group :production do
+  gem 'unicorn'
 end
